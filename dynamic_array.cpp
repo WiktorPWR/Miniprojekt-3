@@ -149,6 +149,13 @@ template <typename T> class DynamicArray // zdefinowanie klasy jako szablon
             }
         }
 
+        void swap(int index_1, int index_2)
+        {
+            T buffer = array[index_1];
+            array[index_1] = array[index_2];
+            array[index_2] = buffer;
+        }
+
         /*void print_array() // funckja majaca na celu wydrukowanie calosci elementow oraz wyswietlisc rozmiar i pojemnosc tablicy
         {
             for(int i=0;i<size;i++)
