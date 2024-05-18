@@ -1,0 +1,12 @@
+hash_table.insert({"Jadwiga", 95});
+    // hash_table.insert({"Krzysztof", 105});
+    // hash_table.insert({"Lucja", 115});
+    // hash_table.insert({"Mikolaj", 125});
+    // hash_table.insert({"Nina", 135});
+    // hash_table.insert({"Olek", 145});
+    // hash_table.insert({"Pawel", 155});
+    // hash_table.insert({"Rafal", 165});
+    // hash_table.insert({"Sylwia", 175});
+    // hash_table.insert({"Tomasz", 185});
+    // hash_table.insert({"Urszula", 195});
+    // hash_table.insert({"Wieslaw", 205});

@@ -27,7 +27,7 @@ private: // Sekcja prywatna klasy
 
     // Funkcja hashująca 2
     int hash2(int key) {
-        return (key / array_size) % array_size;  // Zwraca inny indeks tablicy na podstawie klucza
+        return (key / array_size + key) % array_size;  // Zwraca inny indeks tablicy na podstawie klucza
     }
 
     // Funkcja do ponownego haszowania (rozszerzania tablicy)
@@ -78,7 +78,7 @@ public:
     // Funkcja do wstawiania elementu
     void insert(Node node) {
         int count = 0;
-        int max_iterations = array_size * 2; // Ustawia maksymalną liczbę iteracji
+        int max_iterations = array_size * 4; // Ustawia maksymalną liczbę iteracji
 
         while (count < max_iterations) {
             int pos1 = hash1(node.key); // Oblicza pozycję w pierwszej tablicy
