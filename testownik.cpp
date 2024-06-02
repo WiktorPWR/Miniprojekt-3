@@ -10,7 +10,7 @@ int main() {
     RobinHoodHashing<int> hash_table_robin_hood;
     Hash_table_BST<int> hash_table_BST;
 
-    const int ilosc_powtorzen = 1000;
+    const int ilosc_powtorzen = 100;
     int ilosc_elemtow[] = {5000, 8000, 10000, 16000, 20000, 40000, 60000};
     double time_insert_robin_hood = 0;
     double time_remove_robin_hood = 0;
@@ -65,7 +65,7 @@ int main() {
             hash_table_robin_hood.clear();
             hash_table_BST.clear();
         }
-        std::cout << "Ilosc elementow " << elemnty << std::endl;
+        std::cout << "Ilosc elementow: " << elemnty << std::endl;
         std::cout << "Czas wykonania pojedynczej operacji insert (Robin Hood Hashing): " << time_insert_robin_hood / ilosc_powtorzen << " ns" << std::endl;
         std::cout << "Czas wykonania pojedynczej operacji remove (Robin Hood Hashing): " << time_remove_robin_hood / ilosc_powtorzen << " ns" << std::endl;
         std::cout << "Czas wykonania pojedynczej operacji insert (BST Hash Table): " << time_insert_BST / ilosc_powtorzen << " ns" << std::endl;
