@@ -2,106 +2,189 @@
 #include <stdexcept>
 
 template<typename T>
-class Heap {
+class AVLTree {
 private:
-    T* heap_array; // Array storing heap elements
-    int capacity;  // Capacity of the heap (maximum number of elements)
-    int size;      // Current size of the heap
+    struct AVLNode {
+        T value;
+        int key;
+        AVLNode* left;
+        AVLNode* right;
+        int height;
 
-    // Helper function: moves element up the heap (up)
-    void heapify_up(int index) {
-        if (index <= 0)
-            return;
+        AVLNode(const T& val, int k) : value(val), key(k), left(nullptr), right(nullptr), height(1) {}
+    };
 
-        int parent = (index - 1) / 2;
-        if (heap_array[parent] > heap_array[index]) {
-            std::swap(heap_array[parent], heap_array[index]);
-            heapify_up(parent);
+    AVLNode* root;
+
+    int height(AVLNode* node) const {
+        return node ? node->height : 0;
+    }
+
+    int balance_factor(AVLNode* node) const {
+        return node ? height(node->left) - height(node->right) : 0;
+    }
+
+    void update_height(AVLNode* node) {
+        if (node) {
+            node->height = 1 + std::max(height(node->left), height(node->right));
         }
     }
 
-    // Helper function: moves element down the heap (down)
-    void heapify_down(int index) {
-        int left_child = 2 * index + 1;
-        int right_child = 2 * index + 2;
-        int smallest = index;
+    AVLNode* rotate_right(AVLNode* y) {
+        AVLNode* x = y->left;
+        AVLNode* T2 = x->right;
 
-        if (left_child < size && heap_array[left_child] < heap_array[smallest])
-            smallest = left_child;
-        if (right_child < size && heap_array[right_child] < heap_array[smallest])
-            smallest = right_child;
+        x->right = y;
+        y->left = T2;
 
-        if (smallest != index) {
-            std::swap(heap_array[index], heap_array[smallest]);
-            heapify_down(smallest);
+        update_height(y);
+        update_height(x);
+
+        return x;
+    }
+
+    AVLNode* rotate_left(AVLNode* x) {
+        AVLNode* y = x->right;
+        AVLNode* T2 = y->left;
+
+        y->left = x;
+        x->right = T2;
+
+        update_height(x);
+        update_height(y);
+
+        return y;
+    }
+
+    AVLNode* balance(AVLNode* node) {
+        update_height(node);
+        int balance = balance_factor(node);
+
+        if (balance > 1) {
+            if (balance_factor(node->left) < 0) {
+                node->left = rotate_left(node->left);
+            }
+            return rotate_right(node);
+        }
+        if (balance < -1) {
+            if (balance_factor(node->right) > 0) {
+                node->right = rotate_right(node->right);
+            }
+            return rotate_left(node);
+        }
+
+        return node;
+    }
+
+    AVLNode* insert(AVLNode* node, const T& value, int key) {
+        if (!node) return new AVLNode(value, key);
+
+        if (key < node->key) {
+            node->left = insert(node->left, value, key);
+        } else if (key > node->key) {
+            node->right = insert(node->right, value, key);
+        } else {
+            node->value = value;
+            return node;
+        }
+
+        return balance(node);
+    }
+
+    AVLNode* min_value_node(AVLNode* node) {
+        AVLNode* current = node;
+        while (current->left != nullptr) {
+            current = current->left;
+        }
+        return current;
+    }
+
+    AVLNode* remove(AVLNode* root, int key) {
+        if (!root) return root;
+
+        if (key < root->key) {
+            root->left = remove(root->left, key);
+        } else if (key > root->key) {
+            root->right = remove(root->right, key);
+        } else {
+            if (!root->left || !root->right) {
+                AVLNode* temp = root->left ? root->left : root->right;
+                if (!temp) {
+                    temp = root;
+                    root = nullptr;
+                } else {
+                    *root = *temp;
+                }
+                delete temp;
+            } else {
+                AVLNode* temp = min_value_node(root->right);
+                root->key = temp->key;
+                root->value = temp->value;
+                root->right = remove(root->right, temp->key);
+            }
+        }
+
+        if (!root) return root;
+
+        return balance(root);
+    }
+
+    AVLNode* search(AVLNode* root, int key) const {
+        if (!root || root->key == key) return root;
+
+        if (key < root->key) return search(root->left, key);
+
+        return search(root->right, key);
+    }
+
+    void clear(AVLNode* node) {
+        if (node) {
+            clear(node->left);
+            clear(node->right);
+            delete node;
         }
     }
 
-    // Helper function: resizes the array
-    void resize(int new_capacity) {
-        T* new_heap_array = new T[new_capacity];
-        for (int i = 0; i < size; ++i) {
-            new_heap_array[i] = heap_array[i];
+    void print(AVLNode* node) const {
+        if (node) {
+            print(node->left);
+            std::cout << "(" << node->key << ", " << node->value << ") ";
+            print(node->right);
         }
-        delete[] heap_array;
-        heap_array = new_heap_array;
-        capacity = new_capacity;
     }
 
 public:
-    // Constructor
-    Heap() : heap_array(nullptr), capacity(0), size(0) {}
+    AVLTree() : root(nullptr) {}
 
-    // Destructor
-    ~Heap() {
-        delete[] heap_array;
+    ~AVLTree() {
+        clear(root);
     }
 
-    // Method: inserts an element into the heap
-    void insert(const T& value) {
-        if (size == capacity) {
-            int new_capacity = (capacity == 0) ? 1 : capacity * 2;
-            resize(new_capacity);
-        }
-        heap_array[size++] = value;
-        heapify_up(size - 1);
+    void insert(const T& value, int key) {
+        root = insert(root, value, key);
     }
 
-    // Method: removes and returns the smallest element from the heap
-    T extract_min() {
-        if (size == 0) {
-            throw std::out_of_range("Heap is empty");
-        }
-
-        T min_value = heap_array[0];
-        heap_array[0] = heap_array[--size];
-        heapify_down(0);
-        return min_value;
+    void remove(int key) {
+        root = remove(root, key);
     }
 
-    // Method: returns true if the heap is empty, otherwise false
-    bool empty() const {
-        return size == 0;
+    bool contains(int key) const {
+        return search(root, key) != nullptr;
     }
 
-    // Method: returns the current size of the heap
-    int get_size() const {
-        return size;
+    T get(int key) const {
+        AVLNode* node = search(root, key);
+        if (!node) throw std::out_of_range("Key not found");
+        return node->value;
     }
 
-    // Method: returns the element at the given index (for direct access)
-    T& operator[](int index) {
-        if (index < 0 || index >= size) {
-            throw std::out_of_range("Index out of range");
-        }
-        return heap_array[index];
+    void clear() {
+        clear(root);
+        root = nullptr;
     }
 
-    // Method: prints the heap contents
     void print() const {
-        for (int i = 0; i < size; ++i) {
-            std::cout << "(" << heap_array[i].key << ", " << heap_array[i].value << ") ";
-        }
+        print(root);
     }
 };
 
@@ -114,32 +197,34 @@ public:
         Node() : key(-1) {} // Default constructor setting default values
         Node(T val, int k) : value(val), key(k) {} // Constructor with parameters initializing fields
 
-        // Define comparison operators
         bool operator<(const Node& other) const {
             return key < other.key;
         }
 
-        bool operator>(const Node& other) const {
-            return key > other.key;
+        friend std::ostream& operator<<(std::ostream& os, const Node& node) {
+            os << "(" << node.key << ", " << node.value << ")";
+            return os;
         }
     };
 
 private:
-    int array_size;  // Initial size of the array
-    int elements;    // Number of elements in the table
-    Heap<Node>* array;
+    int array_size;
+    int elements;
+    AVLTree<Node>* array;
 
     int hash(int key) const {
-        return (key / array_size + key) % array_size;
+        unsigned int ukey = static_cast<unsigned int>(key);
+        ukey = (ukey ^ 0xdeadbeef) + (ukey << 4) + 0x42;
+        return static_cast<int>(ukey % static_cast<unsigned int>(array_size));
     }
 
     void resize(int new_size) {
-        Heap<Node>* new_array = new Heap<Node>[new_size];
+        AVLTree<Node>* new_array = new AVLTree<Node>[new_size];
         for (int i = 0; i < array_size; ++i) {
-            while (!array[i].empty()) {
-                Node node = array[i].extract_min();
-                int index = (node.key / new_size + node.key) % new_size;
-                new_array[index].insert(node);
+            while (array[i].contains(array[i].get(i).key)) {
+                Node node = array[i].get(i);
+                int index = hash(node.key);
+                new_array[index].insert(node, node.key);
             }
         }
         delete[] array;
@@ -148,14 +233,14 @@ private:
     }
 
     void check_load_factor_and_resize() {
-        if (elements >= array_size * 0.75) {
+        if (elements >= array_size * 0.75) { // resize if load factor exceeds 0.75
             resize(array_size * 2);
         }
     }
 
 public:
-    Hash_table_BST(int size = 20) : array_size(size), elements(0) {
-        array = new Heap<Node>[array_size];
+    Hash_table_BST(int size = 2000) : array_size(size), elements(0) {
+        array = new AVLTree<Node>[array_size];
     }
 
     ~Hash_table_BST() {
@@ -165,47 +250,25 @@ public:
     void insert(const Node& node) {
         check_load_factor_and_resize();
         int index = hash(node.key);
-        array[index].insert(node);
+        array[index].insert(node, node.key);
         ++elements;
     }
 
     void remove(int key) {
         int index = hash(key);
-        if (array[index].empty()) {
+        if (!array[index].contains(key)) {
             throw std::out_of_range("Key not found");
         }
-
-        // Temporary array to hold elements while searching for the key
-        int heap_size = array[index].get_size();
-        Node* temp_array = new Node[heap_size];
-        int temp_size = 0;
-
-        // Remove all elements from the heap and search for the key
-        bool key_found = false;
-        while (!array[index].empty()) {
-            Node minNode = array[index].extract_min();
-            if (minNode.key == key) {
-                key_found = true;
-                --elements;
-            } else {
-                temp_array[temp_size++] = minNode;
-            }
-        }
-
-        if (!key_found) {
-            delete[] temp_array;
-            throw std::out_of_range("Key not found");
-        }
-
-        // Re-insert all other elements back into the heap
-        for (int i = 0; i < temp_size; ++i) {
-            array[index].insert(temp_array[i]);
-        }
-
-        delete[] temp_array;
+        array[index].remove(key);
+        --elements;
     }
 
-    // Method: prints the hash table contents
+    void clear() {
+        delete[] array;
+        array = new AVLTree<Node>[array_size];
+        elements = 0;
+    }
+
     void print() const {
         for (int i = 0; i < array_size; ++i) {
             std::cout << "Bucket " << i << ": ";
@@ -213,10 +276,6 @@ public:
             std::cout << std::endl;
         }
     }
-    void clear() 
-    {
-    delete[] array; // Usuwa tablicę haszującą
-    array = new Heap<Node>[array_size]; // Tworzy nową, pustą tablicę haszującą
-    elements = 0; // Resetuje liczbę elementów
-    }
 };
+
+
