@@ -2,10 +2,7 @@
 #include "dynamic_array.cpp"
 using namespace std;
 
-
-
 template <typename K, typename V>
-
 class Node {
 public:
     V value;
@@ -22,17 +19,13 @@ public:
 };
 
 template <typename K, typename V>
-
-// Nasza własna klasa Map
 class Map {
-    // Tablica elementów haszowanych
     DynamicArray<Node<K, V>*> table;
     int capacity;
-    // Aktualny rozmiar
     int currentSize;
 
 public:
-    Map(int initialCapacity = 10)
+    Map(int initialCapacity = 1000)
     {
         capacity = initialCapacity;
         currentSize = 0;
@@ -40,7 +33,6 @@ public:
             table.push_back(nullptr);
     }
 
-    // Funkcja implementująca funkcję haszującą, aby znaleźć indeks dla klucza
     int computeHash(K key) const { return key % capacity; }
 
     void addElement(K key, V value)
@@ -48,11 +40,9 @@ public:
         int index = computeHash(key);
         Node<K, V>* newNode = new Node<K, V>(key, value);
 
-        // Jeśli w danym indeksie jeszcze nie ma elementów
         if (table[index] == nullptr) {
             table[index] = newNode;
         } else {
-            // Jeśli istnieje już lista w danym indeksie, dołącz na jej koniec
             Node<K, V>* current = table[index];
             while (current->next != nullptr) {
                 current = current->next;
@@ -62,7 +52,6 @@ public:
         currentSize++;
     }
 
-    // Funkcja do usuwania pary klucz-wartość
     V removeElement(K key)
     {
         int index = computeHash(key);
@@ -87,7 +76,6 @@ public:
         return V(); // Jeśli nie znaleziono
     }
 
-    // Funkcja do wyświetlania przechowywanych par klucz-wartość
     void displayElements() const
     {
         for (int i = 0; i < capacity; i++) {
@@ -101,9 +89,8 @@ public:
         }
     }
 
-    // Destruktor
-    ~Map()
-    {
+    // Funkcja czyszcząca całą listę
+    void clear() {
         for (int i = 0; i < capacity; i++) {
             Node<K, V>* current = table[i];
             while (current != nullptr) {
@@ -111,29 +98,34 @@ public:
                 current = current->next;
                 delete temp;
             }
+            table[i] = nullptr;
         }
+        currentSize = 0;
+    }
+
+    // Destruktor
+    ~Map()
+    {
+        clear();
     }
 };
 
+// int main()
+// {
+//     Map<int, int> map;
 
-/*
+//     map.addElement(1, 0);
+//     map.addElement(2, 1);
+//     map.addElement(4, 3);
+//     map.addElement(5, 4);
+//     map.addElement(6, 5);
+//     map.addElement(7, 6);
+//     map.addElement(21, 7); // Kolizja z 1
 
-int main()
-{
-    Map<int, int>* map = new Map<int, int>;
-
-    map->addElement(1, 0);
-    map->addElement(2, 1);
-    map->addElement(4, 3);
-    map->addElement(5, 4);
-    map->addElement(6, 5);
-    map->addElement(7, 6);
-    map->addElement(21, 7); // Kollision z 1
-
-    map->displayElements();
-    cout << "Removed: " << map->removeElement(4) << endl;
-    map->displayElements();
-    delete map; // Zwolnij pamięć, aby uniknąć wycieków
-    return 0;
-}
- */
+//     map.displayElements();
+//     cout << "Removed: " << map.removeElement(4) << endl;
+//     map.displayElements();
+//     map.clear(); // Czyszczenie listy
+//     map.displayElements();
+//     return 0;
+// }
