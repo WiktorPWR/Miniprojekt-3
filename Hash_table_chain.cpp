@@ -128,6 +128,8 @@ int main()
     map->addElement(21, 7); // Kollision z 1
 
     map->displayElements();
+    cout << "Removed: " << map->removeElement(4) << endl;
+    map->displayElements();
     delete map; // Zwolnij pamięć, aby uniknąć wycieków
     return 0;
 }
