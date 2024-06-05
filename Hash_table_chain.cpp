@@ -62,6 +62,31 @@ public:
         currentSize++;
     }
 
+    // Funkcja do usuwania pary klucz-wartość
+    V removeElement(K key)
+    {
+        int index = computeHash(key);
+        Node<K, V>* current = table[index];
+        Node<K, V>* prev = nullptr;
+
+        while (current != nullptr) {
+            if (current->key == key) {
+                if (prev == nullptr) {
+                    table[index] = current->next;
+                } else {
+                    prev->next = current->next;
+                }
+                V value = current->value;
+                delete current;
+                currentSize--;
+                return value;
+            }
+            prev = current;
+            current = current->next;
+        }
+        return V(); // Jeśli nie znaleziono
+    }
+
     // Funkcja do wyświetlania przechowywanych par klucz-wartość
     void displayElements() const
     {
