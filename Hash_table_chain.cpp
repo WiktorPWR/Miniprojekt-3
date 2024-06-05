@@ -115,6 +115,9 @@ public:
     }
 };
 
+
+/*
+
 int main()
 {
     Map<int, int>* map = new Map<int, int>;
@@ -133,3 +136,4 @@ int main()
     delete map; // Zwolnij pamięć, aby uniknąć wycieków
     return 0;
 }
+ */
