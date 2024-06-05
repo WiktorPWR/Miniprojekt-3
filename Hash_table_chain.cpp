@@ -21,3 +21,25 @@ public:
     }
 };
 
+template <typename K, typename V>
+
+// Nasza własna klasa Map
+class Map {
+    // Tablica elementów haszowanych
+    DynamicArray<Node<K, V>*> table;
+    int capacity;
+    // Aktualny rozmiar
+    int currentSize;
+
+public:
+    Map(int initialCapacity)
+    {
+
+    }
+
+    // Destruktor
+    ~Map()
+    {
+
+    }
+};
