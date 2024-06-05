@@ -29,17 +29,17 @@ int main() {
             for (int j = 0; j <= elemnty; j++) {
                 int random_value = rand();
                 int random_key = rand();
-                hash_table_robin_hood.insert({random_value, random_key});
+                //hash_table_robin_hood.insert({random_value, random_key});
                 //hash_table_BST.insert({random_value, random_key});
 
-                //hash_chain.addElement(random_key,random_value);
+                hash_chain.addElement(random_key,random_value);
                 // std::cout << "Dodanie elementu " << j << std::endl;
             }
             
             // Testy
             int random_value = rand();
             int random_key = rand();
-
+/*
             // Test operacji insert dla Robin Hood Hashing
             auto begin_insert_robin_hood = std::chrono::high_resolution_clock::now();
             hash_table_robin_hood.insert({random_value, random_key});
@@ -53,7 +53,7 @@ int main() {
             auto end_remove_robin_hood = std::chrono::high_resolution_clock::now();
             auto elapsed_remove_robin_hood = std::chrono::duration_cast<std::chrono::nanoseconds>(end_remove_robin_hood - begin_remove_robin_hood);
             time_remove_robin_hood += elapsed_remove_robin_hood.count();
-/*
+
             // Test operacji insert dla BST Hash Table
             auto begin_insert_BST = std::chrono::high_resolution_clock::now();
             hash_table_BST.insert({random_value, random_key});
@@ -67,7 +67,7 @@ int main() {
             auto end_remove_BST = std::chrono::high_resolution_clock::now();
             auto elapsed_remove_BST = std::chrono::duration_cast<std::chrono::nanoseconds>(end_remove_BST - begin_remove_BST);
             time_remove_BST += elapsed_remove_BST.count();
-
+*/
             // Test operacji insert dla Robin Hood Hashing
             auto begin_insert_chain = std::chrono::high_resolution_clock::now();
             hash_chain.addElement(random_value, random_key);
@@ -81,22 +81,22 @@ int main() {
             auto end_remove_chain = std::chrono::high_resolution_clock::now();
             auto elapsed_remove_chain = std::chrono::duration_cast<std::chrono::nanoseconds>(end_remove_chain - begin_remove_chain);
             time_remove_chain += elapsed_remove_chain.count();
-*/
+
             //std::cout << "przejscie " << i << std::endl;
             // Czyszczenie list
-            hash_table_robin_hood.clear();
+            //hash_table_robin_hood.clear();
             //hash_table_BST.clear();
-            //hash_chain.clear();
+            hash_chain.clear();
 
         }
         std::cout << "Ilosc elementow: " << elemnty << std::endl;
-        std::cout << "Czas wykonania pojedynczej operacji insert (Robin Hood Hashing): " << time_insert_robin_hood / ilosc_powtorzen << " ns" << std::endl;
+        /*std::cout << "Czas wykonania pojedynczej operacji insert (Robin Hood Hashing): " << time_insert_robin_hood / ilosc_powtorzen << " ns" << std::endl;
         std::cout << "Czas wykonania pojedynczej operacji remove (Robin Hood Hashing): " << time_remove_robin_hood / ilosc_powtorzen << " ns" << std::endl;
-        /*std::cout << "Czas wykonania pojedynczej operacji insert (BST Hash Table): " << time_insert_BST / ilosc_powtorzen << " ns" << std::endl;
+        std::cout << "Czas wykonania pojedynczej operacji insert (BST Hash Table): " << time_insert_BST / ilosc_powtorzen << " ns" << std::endl;
         std::cout << "Czas wykonania pojedynczej operacji remove (BST Hash Table): " << time_remove_BST / ilosc_powtorzen << " ns" << std::endl;
-        std::cout << "Czas wykonania pojedynczej operacji insert (Chain Hash Table): " << time_insert_chain / ilosc_powtorzen << " ns" << std::endl;
+        */std::cout << "Czas wykonania pojedynczej operacji insert (Chain Hash Table): " << time_insert_chain / ilosc_powtorzen << " ns" << std::endl;
         std::cout << "Czas wykonania pojedynczej operacji remove (Chain Hash Table): " << time_remove_chain / ilosc_powtorzen << " ns" << std::endl;
-    */}
+    }
 
     return 0;
 }

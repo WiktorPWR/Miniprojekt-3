@@ -25,7 +25,7 @@ class Chain_hash {
     int currentSize;
 
 public:
-    Chain_hash(int initialCapacity = 1000)
+    Chain_hash(int initialCapacity)
     {
         capacity = initialCapacity;
         currentSize = 0;
@@ -51,6 +51,7 @@ public:
         }
         currentSize++;
     }
+
 
     V removeElement(K key)
     {
