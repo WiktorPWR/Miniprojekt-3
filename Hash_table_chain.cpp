@@ -40,6 +40,42 @@ public:
             table.push_back(nullptr);
     }
 
+    // Funkcja implementująca funkcję haszującą, aby znaleźć indeks dla klucza
+    int computeHash(K key) const { return key % capacity; }
+
+    void addElement(K key, V value)
+    {
+        int index = computeHash(key);
+        Node<K, V>* newNode = new Node<K, V>(key, value);
+
+        // Jeśli w danym indeksie jeszcze nie ma elementów
+        if (table[index] == nullptr) {
+            table[index] = newNode;
+        } else {
+            // Jeśli istnieje już lista w danym indeksie, dołącz na jej koniec
+            Node<K, V>* current = table[index];
+            while (current->next != nullptr) {
+                current = current->next;
+            }
+            current->next = newNode;
+        }
+        currentSize++;
+    }
+
+    // Funkcja do wyświetlania przechowywanych par klucz-wartość
+    void displayElements() const
+    {
+        for (int i = 0; i < capacity; i++) {
+            Node<K, V>* current = table[i];
+            while (current != nullptr) {
+                cout << "key = " << current->key
+                     << "  value = " << current->value
+                     << endl;
+                current = current->next;
+            }
+        }
+    }
+
     // Destruktor
     ~Map()
     {
@@ -58,6 +94,15 @@ int main()
 {
     Map<int, int>* map = new Map<int, int>;
 
+    map->addElement(1, 0);
+    map->addElement(2, 1);
+    map->addElement(4, 3);
+    map->addElement(5, 4);
+    map->addElement(6, 5);
+    map->addElement(7, 6);
+    map->addElement(21, 7); // Kollision z 1
+
+    map->displayElements();
     delete map; // Zwolnij pamięć, aby uniknąć wycieków
     return 0;
 }
