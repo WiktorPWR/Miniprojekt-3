@@ -169,7 +169,22 @@ template <typename T> class DynamicArray // zdefinowanie klasy jako szablon
         {
             array[location] = 18;
         }
-        
+
+    T& operator[](int index) {
+        if (index >= 0 && index < size) {
+            return array[index];
+        } else {
+            throw std::out_of_range("Index out of range");
+        }
+    }
+
+    const T& operator[](int index) const {
+        if (index >= 0 && index < size) {
+            return array[index];
+        } else {
+            throw std::out_of_range("Index out of range");
+        }
+    }
 
         ~DynamicArray() //dekonostruktor
         {
