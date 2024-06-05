@@ -10,7 +10,7 @@ int main() {
     srand((unsigned) time(NULL));
     RobinHoodHashing<int> hash_table_robin_hood;
     Hash_table_BST<int> hash_table_BST;
-    Map<int, int> hash_chain;
+    Chain_hash<int, int> hash_chain;
 
 
     const int ilosc_powtorzen = 100;

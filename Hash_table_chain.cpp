@@ -19,13 +19,13 @@ public:
 };
 
 template <typename K, typename V>
-class Map {
+class Chain_hash {
     DynamicArray<Node<K, V>*> table;
     int capacity;
     int currentSize;
 
 public:
-    Map(int initialCapacity = 1000)
+    Chain_hash(int initialCapacity = 1000)
     {
         capacity = initialCapacity;
         currentSize = 0;
@@ -104,7 +104,7 @@ public:
     }
 
     // Destruktor
-    ~Map()
+    ~Chain_hash()
     {
         clear();
     }
