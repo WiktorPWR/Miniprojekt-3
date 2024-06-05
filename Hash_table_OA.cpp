@@ -97,5 +97,13 @@ public:
         return V();
     }
 
+    void clear() {
+        delete table;
+    }
+
+    ~Open_address(){
+        clear();
+    }
+
 
 };
