@@ -46,9 +46,16 @@ private:
         delete[] old_array;
     }
 
-    void maintainLoadFactor() {
+
+    void maintainLoadFactorTop() {
         float load_factor = static_cast<float>(elements) / static_cast<float>(array_size);
-        if (load_factor > 0.75f || load_factor < 0.25f) {
+        if (load_factor > 0.75f) {
+            rehash();
+        }
+    }
+    void maintainLoadFactorBot() {
+        float load_factor = static_cast<float>(elements) / static_cast<float>(array_size);
+        if (load_factor < 0.25f) {
             rehash();
         }
     }
@@ -77,7 +84,7 @@ public:
         }
 
         elements++;
-        maintainLoadFactor();
+        maintainLoadFactorTop();
     }
 
     void removeElement(K key) {
@@ -94,7 +101,7 @@ public:
                 }
                 delete current;
                 elements--;
-                maintainLoadFactor();
+                maintainLoadFactorBot();
                 return;
             }
             prev = current;
