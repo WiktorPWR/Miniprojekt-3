@@ -1,35 +1,29 @@
 #include <iostream>
-#include "RobinHood_hashing.cpp"
-#include "string"
-#include "Hash_table_with_BST.cpp"
-#include "Hash_table_chain.cpp"
-#include "Hash_table_OA.cpp"
+#include "RobinHood_hashing.hpp"
+#include "Hash_table_chain.hpp"
+#include "Hash_table_OA.hpp"
 #include <cstdlib>
 #include <chrono>
 
 int main() {
     srand((unsigned) time(NULL));
     RobinHoodHashing<int> hash_table_robin_hood;
-    Hash_table_BST<int> hash_table_BST;
     Chain_hash<int, int> hash_chain;
     Open_address<int,int> hash_oa;
 
 
     const int ilosc_powtorzen = 100;
-    int ilosc_elemtow[] = {5000, 8000, 10000, 16000, 20000, 40000, 60000};
+    int ilosc_elemtow[] = {5000, 8000, 10000, 16000, 20000, 40000, 60000, 150000, 300000};
     double time_insert_robin_hood = 0;
     double time_insert_chain = 0;
     double time_remove_robin_hood = 0;
     double time_remove_chain = 0;
-    double time_insert_BST = 0;
-    double time_remove_BST = 0;
     double time_insert_oa = 0;
     double time_remove_oa = 0;
 
     for (int elemnty : ilosc_elemtow) {
         for (int i = 0; i <= ilosc_powtorzen; i++) {
-            //std::cout << "dupa";
-            //int x = 0;
+
             // Utworzenie tablicy elementów
             for (int j = 0; j <= elemnty; j++) {
                 int random_value = rand();
@@ -118,8 +112,8 @@ int main() {
         std::cout << "Czas wykonania pojedynczej operacji insert (Chain Hash Table): " << time_insert_chain / ilosc_powtorzen << " ns" << std::endl;
         std::cout << "Czas wykonania pojedynczej operacji remove (Chain Hash Table): " << time_remove_chain / ilosc_powtorzen << " ns" << std::endl;
     */
-        std::cout << "Czas wykonania pojedynczej operacji insert (OA Hash Table): " << time_insert_oa / ilosc_powtorzen << " ns" << std::endl;
-        std::cout << "Czas wykonania pojedynczej operacji remove (OA Hash Table): " << time_remove_oa / ilosc_powtorzen << " ns" << std::endl;
+        std::cout << time_insert_oa / ilosc_powtorzen << std::endl;
+        std::cout << time_remove_oa / ilosc_powtorzen << std::endl;
 
     }
 

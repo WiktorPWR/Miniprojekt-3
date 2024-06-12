@@ -20,12 +20,13 @@ private:
     Node** array;        // Hash table
 
     int hash(K key) const {
-        return std::abs(key) % array_size;
+        // Ulepszona funkcja haszująca
+        return key % array_size;
     }
 
-    void rehash() {
+    void rehash(int new_array_size) {
         int old_size = array_size;
-        array_size *= 2;
+        array_size = new_array_size;
 
         Node** new_array = new Node*[array_size]();
         Node** old_array = array;
@@ -50,13 +51,14 @@ private:
     void maintainLoadFactorTop() {
         float load_factor = static_cast<float>(elements) / static_cast<float>(array_size);
         if (load_factor > 0.75f) {
-            rehash();
+            rehash(array_size*2);
         }
     }
+
     void maintainLoadFactorBot() {
         float load_factor = static_cast<float>(elements) / static_cast<float>(array_size);
         if (load_factor < 0.25f) {
-            rehash();
+            rehash(array_size/2);
         }
     }
 
@@ -107,8 +109,6 @@ public:
             prev = current;
             current = current->next;
         }
-
-        //throw std::runtime_error("Element not found");
     }
 
     void print() const {

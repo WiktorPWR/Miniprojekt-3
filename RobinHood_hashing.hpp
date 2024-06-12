@@ -20,9 +20,7 @@ private:
     Node* array;         // Hash table
 
     int hash(int key) const {
-        unsigned int ukey = static_cast<unsigned int>(key);
-        ukey = (ukey ^ 0xdeadbeef) + (ukey << 4) + 0x42;
-        return static_cast<int>(ukey % static_cast<unsigned int>(array_size));
+        return std::abs(key) % array_size;
     }
 
     void rehash() {

@@ -1,5 +1,4 @@
 #include <bits/stdc++.h>
-#include "dynamic_array.cpp"
 using namespace std;
 
 // Szablon dla typu generycznego
@@ -30,36 +29,35 @@ private:
         return std::abs(key) % capacity;
     }
 
-    void rehash() {
+    void rehash(int new_capacity) {
         int old_size = capacity;
-        capacity *= 2;
+        capacity = new_capacity;
 
-        Node* new_array = new Node[capacity]();
-        Node* old_array = table;
+        Node* new_table = new Node[capacity]();
+        Node* old_table = table;
 
-        table = new_array;
+        table = new_table;
         currentSize = 0;
 
         for (int i = 0; i < old_size; ++i) {
-            if (old_array[i].key != K()) {
-                addElement(old_array[i].key, old_array[i].value);
+            if (old_table[i].key != K() && old_table[i].key != dummyNode.key) {
+                addElement(old_table[i].key, old_table[i].value);
             }
         }
 
-        delete[] old_array;
+        delete[] old_table;
     }
 
     void maintainLoadFactorTop() {
         float load_factor = static_cast<float>(currentSize) / static_cast<float>(capacity);
         if (load_factor > 0.75f) {
-            rehash();
+            rehash(capacity*2);
         }
     }
-
     void maintainLoadFactorBot() {
         float load_factor = static_cast<float>(currentSize) / static_cast<float>(capacity);
-        if (load_factor < 0.25f) {
-            rehash();
+        if (load_factor < 0.25f && capacity > 10) {  // Prevent rehashing to a very small size
+            rehash(capacity/2);
         }
     }
 
@@ -71,16 +69,13 @@ public:
 
     // Funkcja do dodawania pary klucz-wartość
     void addElement(K key, V value) {
-
         Node newNode(key, value);
 
         // Zastosuj funkcję haszującą, aby znaleźć indeks dla podanego klucza
         int index = hash(key);
 
         // Znajdź następne wolne miejsce
-        while (table[index].key != K()
-               && table[index].key != key
-               && table[index].key != dummyNode.key) {
+        while (table[index].key != K() && table[index].key != key && table[index].key != dummyNode.key) {
             index++;
             index %= capacity;
         }
