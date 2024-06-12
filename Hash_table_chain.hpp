@@ -15,13 +15,12 @@ public:
     };
 
 private:
-    int array_size;      // Size of the hash table
-    int elements;        // Number of elements in the hash table
-    Node** array;        // Hash table
+    int array_size;      //wielkość tablicy
+    int elements;        //ilość elementów
+    Node** array;        //tablica
 
     int hash(K key) const {
-        // Ulepszona funkcja haszująca
-        return key % array_size;
+        return key % array_size; //funkcja hashująca
     }
 
     void rehash(int new_array_size) {
